@@ -4,13 +4,10 @@ const mqtt = require('mqtt');
 const fs = require('fs');
 const path = require('path');
 
-const {getApiKey, getTenantId, getApplicationId, 
-        createDevice, enqueueDevPacket, deleteDevice,
-        createGateway, deleteGateway, updateGateway,
-        createApplication, deleteApplication} = require('./chirpstack_cmds');
-const { am103l, ws301} = require('./deco');
-const { saveSQLite, getAllData, deleteAllData, deleteOldData, 
-        getUnpublishedMessages, updatePublishedStatus} = require('./cmds_db');
+const {getApiKey, getTenantId, getApplicationId, createDevice, enqueueDevPacket, deleteDevice,
+        createGateway, deleteGateway, updateGateway, createApplication, deleteApplication} = require('./chirpstack_cmds');
+const { saveSQLite, deleteOldData, getUnpublishedMessages, updatePublishedStatus} = require('./database');
+
 // ============================ Variables ============================ //
 
 // Amazon MQTT Server
@@ -224,7 +221,6 @@ async function publishPendingMessages() {
     }
 }
 
-
 // Evento de conexión
 function amazon_on_connect() {
     console.log("Conectado a Amazon MQTT Broker---------------------------");
@@ -423,6 +419,7 @@ async function main() {
     amazon_connect_mqtt();
     //amazon_mqtt_client.end(); //simula desconexion done=0
     await chirpstack_connect_mqtt();
+
     
 }
 

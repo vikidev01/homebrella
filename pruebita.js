@@ -1,3 +1,3 @@
-const {getAllData, deleteOldData, getUnpublishedMessages, updatePublishedStatus} = require('./cmds_db');
+const {getAllData, deleteOldData, getUnpublishedMessages, updatePublishedStatus} = require('./database');
 
 getAllData()

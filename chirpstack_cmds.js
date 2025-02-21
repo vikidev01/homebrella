@@ -8,22 +8,11 @@ const device_pb = require('@chirpstack/chirpstack-api/api/device_pb');
 const device_grpc_pb = require('@chirpstack/chirpstack-api/api/device_grpc_pb');
 const device_profile_pb = require('@chirpstack/chirpstack-api/api/device_profile_pb');
 const device_profile_grpc_pb = require('@chirpstack/chirpstack-api/api/device_profile_grpc_pb');
-const device_profile_template_pb = require('@chirpstack/chirpstack-api/api/device_profile_template_pb');
-const device_profile_template_grpc_pb = require('@chirpstack/chirpstack-api/api/device_profile_template_grpc_pb');
-const fuota_pb = require('@chirpstack/chirpstack-api/api/fuota_pb');
-const fuota_grpc_pb = require('@chirpstack/chirpstack-api/api/fuota_grpc_pb');
 const gateway_pb = require('@chirpstack/chirpstack-api/api/gateway_pb');
 const gateway_grpc_pb = require('@chirpstack/chirpstack-api/api/gateway_grpc_pb');
-const internal_pb = require('@chirpstack/chirpstack-api/api/internal_pb');
-const internal_grpc_pb = require('@chirpstack/chirpstack-api/api/internal_grpc_pb');
-const multicast_group_pb = require('@chirpstack/chirpstack-api/api/multicast_group_pb');
-const multicast_group_grpc_pb = require('@chirpstack/chirpstack-api/api/multicast_group_grpc_pb');
-const relay_pb = require('@chirpstack/chirpstack-api/api/relay_pb');
-const relay_grpc_pb = require('@chirpstack/chirpstack-api/api/relay_grpc_pb');
 const tenant_pb = require('@chirpstack/chirpstack-api/api/tenant_pb');
 const tenant_grpc_pb = require('@chirpstack/chirpstack-api/api/tenant_grpc_pb');
-const user_group_pb = require('@chirpstack/chirpstack-api/api/user_pb');
-const user_grpc_pb = require('@chirpstack/chirpstack-api/api/user_grpc_pb');
+
 
 const server = "127.0.0.1:8080";
 
@@ -489,6 +478,7 @@ async function createGateway(apiKey, gatewayId, name, description) {
     gateway.setName(name);
     gateway.setDescription(description);
     gateway.setStatsInterval(statsInterval);
+    gateway.setLocation("AU915");
 
     request.setGateway(gateway);
     
