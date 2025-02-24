@@ -46,10 +46,15 @@ const HOMEBRELLA_CMDS_TOPIC   = "hmain/cmds"
 
 let chirpstack_mqtt_client = " ";
 
-
 const BACKUP_DEVICES_TOPIC = "backup/topic"
-const backup_broker = 'mqtt://test.mosquitto.org:1883';
-const backup_mqtt_client = mqtt.connect(backup_broker);
+const backup_broker = 'broker.hivemq.com';
+let backup_mqtt_client = mqtt.connect({
+        host: backup_broker,
+        port: 1883,
+        protocol: 'mqtt',
+        clientId: "BackupClient"
+    });
+
 // =========================== Functions ============================= //
 
 // ------------------------- Parse Commands -------------------------- //
@@ -221,6 +226,7 @@ async function publishPendingMessages() {
     }
 }
 
+
 // Evento de conexión
 function amazon_on_connect() {
     console.log("Conectado a Amazon MQTT Broker---------------------------");
@@ -233,7 +239,7 @@ function amazon_on_connect() {
         }
     });
     // Ejecutar cada 24 hs
-    setInterval(publishPendingMessages, 24 * 60 * 60 * 1000); // reenvía mensajes que no fueron publicados
+    setInterval(publishPendingMessages,  60 * 1000); // reenvía mensajes que no fueron publicados
 }
 
 // Evento de desconexión
@@ -254,11 +260,11 @@ function retry_connection() {
     setTimeout(() => {
         try {
             amazon_mqtt_client.reconnect();
-            console.log("Reconexión exitosa!");
+	    console.log("Reconexión exitosa!");
         } catch (err) {
             console.error("Fallo en la reconexión. Reintentando...", err);
             reconnect_delay = Math.min(reconnect_delay * RECONNECT_RATE, MAX_RECONNECT_DELAY);
-            retry_connection();
+	    retry_connection();
         }
     }, reconnect_delay * 1000);
 }
@@ -337,18 +343,15 @@ function chirpstack_on_message(topic, message) {
                 });
             },
             backup: (message) => {
-                if (backup_mqtt_client.connected) {
-                    backup_mqtt_client.publish(BACKUP_DEVICES_TOPIC, message.toString(), (err) => {
-                        if (err) {
-                            console.error(`Error publicando en respaldo ${BACKUP_DEVICES_TOPIC}:`, err);
-                        } else {
-                            console.log(`Publicado en respaldo ${BACKUP_DEVICES_TOPIC}.`);
-                            published = 1;
-                        }
-                    });
-                } else {
-                    console.error("No conectado al broker de respaldo, no se puede publicar.");
-                }
+                    console.log("El cliente backup es:        ", backup_mqtt_client)
+		    backup_mqtt_client.publish(BACKUP_DEVICES_TOPIC, message.toString(),(err) => {
+                    if (err) {
+                        console.error(`Error publicando en respaldo ${BACKUP_DEVICES_TOPIC}:`, err);
+                    } else {
+                        console.log(`Publicado en respaldo ${BACKUP_DEVICES_TOPIC}.`);
+                        published = 1;
+                    }
+                });
             }
         };
 
@@ -419,8 +422,7 @@ async function main() {
     amazon_connect_mqtt();
     //amazon_mqtt_client.end(); //simula desconexion done=0
     await chirpstack_connect_mqtt();
-
-    
+       
 }
 
 main();
