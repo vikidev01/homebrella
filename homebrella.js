@@ -239,7 +239,7 @@ function amazon_on_connect() {
         }
     });
     // Ejecutar cada 24 hs
-    setInterval(publishPendingMessages,  60 * 1000); // reenvía mensajes que no fueron publicados
+    setInterval(publishPendingMessages, 24 * 60 * 60 * 1000); // reenvía mensajes que no fueron publicados
 }
 
 // Evento de desconexión
